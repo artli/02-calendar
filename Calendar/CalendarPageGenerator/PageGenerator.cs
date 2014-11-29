@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using System.Drawing;
 
 namespace CalendarPageGenerator {
-    public class Generator {
-        public Bitmap GeneratePage(DateTime date) {
+    public class PageGenerator {
+        public static Bitmap GeneratePage(DateTime date) {
             return new Bitmap(1, 1);
         }
     }
