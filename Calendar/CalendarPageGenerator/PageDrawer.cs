@@ -16,8 +16,11 @@ namespace CalendarPageGenerator {
             Date = date;
         }
 
-        void DrawText(Graphics g, Rectangle rect, string text) {
-            g.DrawString(text, TextFont, Brushes.Black, rect);
+        void DrawCenteredText(Graphics g, Rectangle rect, string text) {
+            var textSize = g.MeasureString(text, TextFont);
+            var dx = (rect.Size.Width - textSize.Width) / 2;
+            var dy = (rect.Size.Height - textSize.Height) / 2;
+            g.DrawString(text, TextFont, Brushes.Black, rect.X + dx, rect.Y + dy);
         }
 
         Bitmap DrawGrid(string[,] grid) {
@@ -30,7 +33,7 @@ namespace CalendarPageGenerator {
                 for (int i = 0; i < gridHeight; i++) {
                     for (int j = 0; j < gridWidth; j++) {
                         var rect = new Rectangle(j * CellWidth, i * CellHeight, CellWidth, CellHeight);
-                        DrawText(g, rect, grid[i, j]);
+                        DrawCenteredText(g, rect, grid[i, j]);
                     }
                 }
             }
