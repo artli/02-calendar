@@ -24,6 +24,13 @@ namespace CalendarPageGenerator {
             g.DrawString(text, TextFont, Brushes.Black, rect.X + dx, rect.Y + dy);
         }
 
+        void DrawWeekdays(Graphics g, Rectangle rect) {
+            for (int i = 0; i < WeekdayNames.Length; i++) {
+                var weekdayRect = new Rectangle(rect.X + i * CellWidth, rect.Y, CellWidth, CellHeight);
+                DrawCenteredText(g, weekdayRect, WeekdayNames[i]);
+            }
+        }
+
         void DrawGrid(Graphics g, Rectangle rect, string[,] grid) {
             var gridHeight = grid.GetLength(0);
             var gridWidth = grid.GetLength(1);
@@ -35,11 +42,10 @@ namespace CalendarPageGenerator {
             }
         }
 
-        void DrawWeekdays(Graphics g, Rectangle rect) {
-            for (int i = 0; i < WeekdayNames.Length; i++) {
-                var weekdayRect = new Rectangle(rect.X + i * CellWidth, rect.Y, CellWidth, CellHeight);
-                DrawCenteredText(g, weekdayRect, WeekdayNames[i]);
-            }
+        void DrawCurrentDay(Graphics g, float currentDayBorder, Point currentDayPosition) {
+            var x = currentDayPosition.Y * CellWidth;
+            var y = (currentDayPosition.X + 1) * CellHeight;
+            g.DrawRectangle(new Pen(Brushes.Red, currentDayBorder), x, y, CellWidth - currentDayBorder, CellHeight - currentDayBorder);
         }
 
         public Bitmap DrawPage() {
@@ -56,6 +62,7 @@ namespace CalendarPageGenerator {
                 var gridRect = new Rectangle(0, CellHeight, gridWidth, gridHeight);
                 DrawWeekdays(g, weekdaysRect);
                 DrawGrid(g, gridRect, monthGrid.Grid);
+                DrawCurrentDay(g, 3, monthGrid.CurrentDayPosition);
             }
             return pageBitmap;
         }
