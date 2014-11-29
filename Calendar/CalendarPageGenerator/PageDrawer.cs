@@ -7,8 +7,9 @@ using System.Drawing;
 
 namespace CalendarPageGenerator {
     public class PageDrawer {
-        public int CellWidth = 40;
-        public int CellHeight = 40;
+        public static string[] WeekdayNames = { "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su" };
+        public int CellWidth = 60;
+        public int CellHeight = 60;
         public Font TextFont = new Font(FontFamily.GenericSansSerif, 20);
         DateTime Date;
 
@@ -23,27 +24,40 @@ namespace CalendarPageGenerator {
             g.DrawString(text, TextFont, Brushes.Black, rect.X + dx, rect.Y + dy);
         }
 
-        Bitmap DrawGrid(string[,] grid) {
+        void DrawGrid(Graphics g, Rectangle rect, string[,] grid) {
             var gridHeight = grid.GetLength(0);
             var gridWidth = grid.GetLength(1);
-            var gridBitmap = new Bitmap(CellWidth * gridWidth, CellHeight * gridHeight);
-            using (Graphics g = Graphics.FromImage(gridBitmap)) {
-                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                g.Clear(Color.Wheat);
-                for (int i = 0; i < gridHeight; i++) {
-                    for (int j = 0; j < gridWidth; j++) {
-                        var rect = new Rectangle(j * CellWidth, i * CellHeight, CellWidth, CellHeight);
-                        DrawCenteredText(g, rect, grid[i, j]);
-                    }
+            for (int i = 0; i < gridHeight; i++) {
+                for (int j = 0; j < gridWidth; j++) {
+                    var cellRect = new Rectangle(rect.X + j * CellWidth, rect.Y + i * CellHeight, CellWidth, CellHeight);
+                    DrawCenteredText(g, cellRect, grid[i, j]);
                 }
             }
-            return gridBitmap;
+        }
+
+        void DrawWeekdays(Graphics g, Rectangle rect) {
+            for (int i = 0; i < WeekdayNames.Length; i++) {
+                var weekdayRect = new Rectangle(rect.X + i * CellWidth, rect.Y, CellWidth, CellHeight);
+                DrawCenteredText(g, weekdayRect, WeekdayNames[i]);
+            }
         }
 
         public Bitmap DrawPage() {
             var monthGrid = GridGenerator.GenerateMonthGrid(Date);
-            var gridBitmap = DrawGrid(monthGrid.Grid);
-            return gridBitmap;
+
+            var gridHeight = monthGrid.Grid.GetLength(0);
+            var gridWidth = monthGrid.Grid.GetLength(1);
+
+            var pageBitmap = new Bitmap(gridWidth * CellWidth, (gridHeight + 1) * CellHeight);
+            using (Graphics g = Graphics.FromImage(pageBitmap)) {
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                g.Clear(Color.Wheat);
+                var weekdaysRect = new Rectangle(0, 0, gridWidth, CellHeight);
+                var gridRect = new Rectangle(0, CellHeight, gridWidth, gridHeight);
+                DrawWeekdays(g, weekdaysRect);
+                DrawGrid(g, gridRect, monthGrid.Grid);
+            }
+            return pageBitmap;
         }
     }
 }
