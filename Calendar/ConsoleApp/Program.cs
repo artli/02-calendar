@@ -5,10 +5,34 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using CalendarPageGenerator;
+using System.Drawing.Imaging;
+using System.IO;
 
 namespace ConsoleApp {
     class Program {
         static void Main(string[] args) {
+            if (args.Length != 1 || args[0] == "/?") {
+                Console.WriteLine("You should provide exactly one argument - the date to generate a calendar page for.");
+                return;
+            }
+
+            var date = DateTime.Now;
+            try {
+                date = DateTime.Parse(args[0]);
+            } catch (FormatException ex) {
+                Console.WriteLine("Error while parsing your date: '" + args[0] + "'");
+                return;
+            }
+
+            var image = new PageDrawer(date).DrawPage();
+
+            var filename = "calendar.png";
+            try {
+                var fileInfo = new FileInfo(filename);
+                image.Save(fileInfo.OpenWrite(), ImageFormat.Png);
+            } catch (IOException ex) {
+                Console.WriteLine("Error while writing to " + filename);
+            }
         }
     }
 }
