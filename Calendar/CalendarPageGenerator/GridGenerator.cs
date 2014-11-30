@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 using System.Drawing;
 
 namespace CalendarPageGenerator {
-    struct MonthGrid {
+    public struct MonthGrid {
         public string[,] Grid;
         public Point CurrentDayPosition;
     }
 
-    static class GridGenerator {
-        static int DayOfWeekNumber(DateTime date) {
+    public static class GridGenerator {
+        public static int DayOfWeekNumber(DateTime date) {
             switch (date.DayOfWeek) {
                 case DayOfWeek.Monday:
                     return 0;
