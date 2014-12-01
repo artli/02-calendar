@@ -7,39 +7,36 @@ using System.Threading.Tasks;
 using System.Drawing;
 
 namespace CalendarPageGenerator {
-    public struct MonthGrid {
-        public string[,] Grid;
-        public Point CurrentDayPosition;
+    public class MonthGrid {
+        public readonly string[,] Grid;
+        public readonly Point CurrentDayPosition;
+
+        public MonthGrid(string[,] grid, Point currentDayPosition) {
+            Grid = grid;
+            CurrentDayPosition = currentDayPosition;
+        }
     }
 
     public static class GridGenerator {
-        public static int DayOfWeekNumber(DateTime date) {
-            switch (date.DayOfWeek) {
-                case DayOfWeek.Monday:
-                    return 0;
-                case DayOfWeek.Tuesday:
-                    return 1;
-                case DayOfWeek.Wednesday:
-                    return 2;
-                case DayOfWeek.Thursday:
-                    return 3;
-                case DayOfWeek.Friday:
-                    return 4;
-                case DayOfWeek.Saturday:
-                    return 5;
-                case DayOfWeek.Sunday:
-                    return 6;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+        private static readonly Dictionary<DayOfWeek, int> _weekdayNumber = new Dictionary<DayOfWeek, int> {
+            {DayOfWeek.Monday, 0},
+            {DayOfWeek.Tuesday, 1},
+            {DayOfWeek.Wednesday, 2},
+            {DayOfWeek.Thursday, 3},
+            {DayOfWeek.Friday, 4},
+            {DayOfWeek.Saturday, 5},
+            {DayOfWeek.Sunday, 6}
+        };
+        public static int WeekdayNumber(DateTime date) {
+            return _weekdayNumber[date.DayOfWeek];
         }
 
         public static MonthGrid GenerateMonthGrid(DateTime date) {
             var daysInMonth = DateTime.DaysInMonth(date.Year, date.Month);
             var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
-            var firstDayNumber = DayOfWeekNumber(firstDayOfMonth);
+            var firstDayNumber = WeekdayNumber(firstDayOfMonth);
             var lastDayOfMonth = new DateTime(date.Year, date.Month, daysInMonth);
-            var lastDayNumber = DayOfWeekNumber(lastDayOfMonth);
+            var lastDayNumber = WeekdayNumber(lastDayOfMonth);
 
             var grid = Enumerable.Repeat("", firstDayNumber)
                 .Concat(
@@ -48,8 +45,8 @@ namespace CalendarPageGenerator {
                 .Concat(
                     Enumerable.Repeat("", 6 - lastDayNumber))
                 .ToTwoDimensionalArray(7);
-            var currentDayPosition = new Point((date.Day - 1 + DayOfWeekNumber(firstDayOfMonth)) / 7, DayOfWeekNumber(date));
-            return new MonthGrid { Grid = grid, CurrentDayPosition = currentDayPosition };
+            var currentDayPosition = new Point((date.Day - 1 + WeekdayNumber(firstDayOfMonth)) / 7, WeekdayNumber(date));
+            return new MonthGrid(grid, currentDayPosition);
         }
     }
 }

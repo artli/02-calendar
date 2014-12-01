@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Drawing;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CalendarPageGenerator;
-using System.Linq;
 
 namespace CalendarPageGenerator.Tests {
     [TestClass]
@@ -14,7 +13,7 @@ namespace CalendarPageGenerator.Tests {
             var mondayDate = DateTime.Parse("2015-02-02");
             var expected = 0;
 
-            var actual = GridGenerator.DayOfWeekNumber(mondayDate);
+            var actual = GridGenerator.WeekdayNumber(mondayDate);
             Assert.AreEqual(expected, actual);
         }
 
@@ -23,12 +22,12 @@ namespace CalendarPageGenerator.Tests {
             var sundayDate = DateTime.Parse("2012-06-03");
             var expected = 6;
 
-            var actual = GridGenerator.DayOfWeekNumber(sundayDate);
+            var actual = GridGenerator.WeekdayNumber(sundayDate);
             Assert.AreEqual(expected, actual);
         }
 
 
-        public void TestMonthGrid(DateTime date, string[,] expectedGrid, Point expectedPosition) {
+        private void TestMonthGrid(DateTime date, string[,] expectedGrid, Point expectedPosition) {
             var actual = GridGenerator.GenerateMonthGrid(date);
             CollectionAssert.AreEqual(expectedGrid, actual.Grid);
             Assert.AreEqual(expectedPosition, actual.CurrentDayPosition);

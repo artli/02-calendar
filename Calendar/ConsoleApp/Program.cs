@@ -16,10 +16,8 @@ namespace ConsoleApp {
                 return;
             }
 
-            var date = DateTime.Now;
-            try {
-                date = DateTime.Parse(args[0]);
-            } catch (FormatException ex) {
+            DateTime date;
+            if (!DateTime.TryParse(args[0], out date)) {
                 Console.WriteLine("Error while parsing your date: '" + args[0] + "'");
                 return;
             }
@@ -29,7 +27,8 @@ namespace ConsoleApp {
             var filename = "calendar.png";
             try {
                 var fileInfo = new FileInfo(filename);
-                image.Save(fileInfo.OpenWrite(), ImageFormat.Png);
+                using (var file = fileInfo.OpenWrite())
+                    image.Save(file, ImageFormat.Png);
             } catch (IOException ex) {
                 Console.WriteLine("Error while writing to " + filename);
             }
