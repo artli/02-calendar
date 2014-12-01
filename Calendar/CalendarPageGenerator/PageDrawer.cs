@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Globalization;
 
 namespace CalendarPageGenerator {
     public class PageDrawer {
-        public static string[] WeekdayNames = { "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su" };
         public int CellWidth = 60;
         public int CellHeight = 60;
         public Font TextFont = new Font(FontFamily.GenericSansSerif, 20);
@@ -25,9 +25,10 @@ namespace CalendarPageGenerator {
         }
 
         void DrawWeekdays(Graphics g, Rectangle rect) {
-            for (int i = 0; i < WeekdayNames.Length; i++) {
+            for (int i = 0; i < 7; i++) {
                 var weekdayRect = new Rectangle(rect.X + i * CellWidth, rect.Y, CellWidth, CellHeight);
-                DrawCenteredText(g, weekdayRect, WeekdayNames[i]);
+                var weekdayNumberFromSunday = (i == 6) ? 0 : i + 1;
+                DrawCenteredText(g, weekdayRect, DateTimeFormatInfo.CurrentInfo.AbbreviatedDayNames[weekdayNumberFromSunday]);
             }
         }
 
