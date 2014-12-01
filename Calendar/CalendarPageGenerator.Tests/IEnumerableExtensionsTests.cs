@@ -5,7 +5,7 @@ namespace CalendarPageGenerator.Tests {
     [TestClass]
     public class IEnumerableExtensionsTests {
         [TestMethod]
-        public void ToTwoDimensionalArraySimple() {
+        public void ToTwoDimensionalArray_ArraySizeDivisibleByDimension_ProcessWholeArray() {
             var ienumerable = new[] { 1, 2, 3, 4, 5, 6, 7, 8 };
             var secondDimension = 2;
             var expected = new[,] {
@@ -20,7 +20,7 @@ namespace CalendarPageGenerator.Tests {
         }
 
         [TestMethod]
-        public void ToTwoDimensionalArrayWithRemainder() {
+        public void ToTwoDimensionalArray_ArraySizeDivisibleByDimension_ThrowOutRemainder() {
             var ienumerable = new[] { 1, 2, 3, 4, 5, 6, 7, 8 };
             var secondDimension = 3;
             var expected = new[,] {

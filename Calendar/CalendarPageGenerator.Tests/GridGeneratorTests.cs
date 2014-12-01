@@ -9,7 +9,7 @@ namespace CalendarPageGenerator.Tests {
     [TestClass]
     public class GridGeneratorTests {
         [TestMethod]
-        public void DayOfWeekNumberMonday() {
+        public void WeekdayNumber_Monday_Return0() {
             var mondayDate = DateTime.Parse("2015-02-02");
             var expected = 0;
 
@@ -18,7 +18,7 @@ namespace CalendarPageGenerator.Tests {
         }
 
         [TestMethod]
-        public void DayOfWeekNumberSunday() {
+        public void WeekdayNumber_Sunday_Return6() {
             var sundayDate = DateTime.Parse("2012-06-03");
             var expected = 6;
 
@@ -27,14 +27,14 @@ namespace CalendarPageGenerator.Tests {
         }
 
 
-        private void TestMonthGrid(DateTime date, string[,] expectedGrid, Point expectedPosition) {
+        private void TestGenerateMonthGrid(DateTime date, string[,] expectedGrid, Point expectedPosition) {
             var actual = GridGenerator.GenerateMonthGrid(date);
             CollectionAssert.AreEqual(expectedGrid, actual.Grid);
             Assert.AreEqual(expectedPosition, actual.CurrentDayPosition);
         }
 
         [TestMethod]
-        public void GenerateMonthGrid5Lines() {
+        public void GenerateMonthGrid_5Lines() {
             var date = DateTime.Parse("2014-11-29");
             var expectedGrid = 
                     Enumerable.Repeat("", 5)
@@ -44,11 +44,11 @@ namespace CalendarPageGenerator.Tests {
                 .ToTwoDimensionalArray(7);
             var expectedPosition = new Point(4, 5);
 
-            TestMonthGrid(date, expectedGrid, expectedPosition);
+            TestGenerateMonthGrid(date, expectedGrid, expectedPosition);
         }
 
         [TestMethod]
-        public void GenerateMonthGrid6Lines() {
+        public void GenerateMonthGrid_6Lines() {
             var date = DateTime.Parse("2014-06-30");
             var expectedGrid = 
                     Enumerable.Repeat("", 6)
@@ -60,18 +60,18 @@ namespace CalendarPageGenerator.Tests {
                 .ToTwoDimensionalArray(7);
             var expectedPosition = new Point(5, 0);
 
-            TestMonthGrid(date, expectedGrid, expectedPosition);
+            TestGenerateMonthGrid(date, expectedGrid, expectedPosition);
         }
 
         [TestMethod]
-        public void GenerateMonthGrid4Lines() {
+        public void GenerateMonthGrid_4Lines() {
             var date = DateTime.Parse("2010-02-02");
             var expectedGrid = Enumerable.Range(1, 28)
                 .Select(num => num.ToString())
                 .ToTwoDimensionalArray(7);
             var expectedPosition = new Point(0, 1);
 
-            TestMonthGrid(date, expectedGrid, expectedPosition);
+            TestGenerateMonthGrid(date, expectedGrid, expectedPosition);
         }
     }
 }
